@@ -1,9 +1,12 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../libs/db.js"
+import jwt  from "jsonwebtoken";
 
 const SALT_ROUNDS = 10;
+const TOKEN = process.env.TOKEN!;
 
-export const createUser = async (name: string, email: string, password: string ) => {
+
+export const createUser = async (name: string, email: string, password: string )  => {
     const existingUser =  await prisma.user.findUnique({
         where: { email }
     })
@@ -27,6 +30,41 @@ export const createUser = async (name: string, email: string, password: string )
         name: user.name,
         email: user.email
     };
-
-
 } 
+
+export const loginUser = async (email: string, password: string) => {
+    const existingUser =  await prisma.user.findUnique({
+        where: { email }
+    })
+
+    if (!existingUser) return null;
+
+    const isValidPassword = await bcrypt.compare(password, existingUser.password);
+    if (!isValidPassword) return null;
+
+    const token = jwt.sign(
+        {id: existingUser.id},
+        TOKEN,
+        {expiresIn: '1d'},
+    )
+
+    return {
+        token,
+        user: {
+            id: existingUser.id,
+            name: existingUser.name,
+            email: existingUser.email,
+        }
+    };
+}
+
+
+export const getUserIdByToken = async (token: string) => {
+    try {
+        const verifyTokenUser = jwt.verify(token, TOKEN) as {id: string};
+        return { user: {id: verifyTokenUser.id}}
+    } catch {
+        return null
+    }
+
+}
