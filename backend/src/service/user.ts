@@ -60,11 +60,9 @@ export const loginUser = async (email: string, password: string) => {
 
 
 export const getUserIdByToken = async (token: string) => {
-    try {
-        const verifyTokenUser = jwt.verify(token, TOKEN) as {id: string};
-        return { user: {id: verifyTokenUser.id}}
-    } catch {
-        return null
-    }
+    const verifyTokenUser = jwt.verify(token, TOKEN) as {id: string};
 
+    if(!verifyTokenUser) return null;
+
+    return { id: verifyTokenUser.id }
 }
