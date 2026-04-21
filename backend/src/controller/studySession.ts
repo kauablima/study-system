@@ -2,7 +2,8 @@ import type { RequestHandler } from "express";
 import { createStudySession } from "../service/studySession.js";
 import { sessionSchema } from "../schemas/create-session.js";
 
-export const registeStudySession: RequestHandler = async (req, res) => {
+export const registerStudySession: RequestHandler = async (req, res) => {
+    const user_id = (req as any).userId;
     const result = sessionSchema.safeParse(req.body);
 
     if(!result.success){
@@ -15,7 +16,7 @@ export const registeStudySession: RequestHandler = async (req, res) => {
         topic: result.data.topic, 
         duration_minutes: result.data.duration_minutes, 
         study_date: result.data.study_date , 
-        user_id: result.data.user_id, 
+        user_id,
         subject_id: result.data.subject_id,
     };
 
