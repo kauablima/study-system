@@ -8,8 +8,8 @@ type studySessionDTO = {
     subject_id: string,
 }
 
-export const createStudySession = (data: studySessionDTO) => {
-    const existignSubejct = prisma.subject.findFirt({
+export const createStudySession = async (data: studySessionDTO) => {
+    const existignSubejct = await prisma.subject.findFirst({
         where: {
             id: data.subject_id,
             user_id: data.user_id,
@@ -18,7 +18,7 @@ export const createStudySession = (data: studySessionDTO) => {
 
     if(!existignSubejct) return null;
 
-    const studySession = prisma.study_session.create({
+    const studySession = await prisma.study_session.create({
         topic: data.topic,
         durantion_minutes: data.duration_minutes,
         study_date: data.study_date,
