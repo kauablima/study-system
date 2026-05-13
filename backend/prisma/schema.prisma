@@ -13,7 +13,9 @@ model User {
   name      String
   password  String
   createdAt DateTime @default(now())
-
+  
+//analisar isso daqui 
+//revision_config  Json? 
   subjects         Subject[]
   weekly_schedules Weekly_schedule[]
   study_sessions   Study_session[]
@@ -28,15 +30,17 @@ model Subject {
   user_id   String
   user      User     @relation(fields: [user_id], references: [id])
 
-  study_sessions Study_session[]
+  study_sessions  Study_session[]
+  weeklySchedules Weekly_schedule[]
 }
 
 model Weekly_schedule {
-  id          String @id @default(uuid())
+  id          String  @id @default(uuid())
   day_of_week Int
-
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id String
+  user_id     String
+  user        User    @relation(fields: [user_id], references: [id])
+  subject_id  String
+  subject     Subject @relation(fields: [subject_id], references: [id])
 }
 
 model Study_session {

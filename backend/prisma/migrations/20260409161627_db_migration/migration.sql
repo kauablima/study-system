@@ -10,6 +10,9 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+
+-- this problem is related to the FOREIGN KEY, add: Study_session, Weekly_schedule?
+-- I'll look into that later.
 CREATE TABLE "Subject" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
